@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CareerController;
+use App\Models\Recommendation;
 
 /*
 |--------------------------------------------------------------------------
@@ -18,20 +19,26 @@ use App\Http\Controllers\CareerController;
 Route::get('/', function () {
     return view('welcome');
 });
-use App\Models\Recommendation;
 
 Route::get('/dashboard', function () {
-    
-        $latest = Recommendation::where('user_id', auth()->id())
-    ->latest()
-    ->first();
 
-$history = Recommendation::where('user_id', auth()->id())
-    ->latest()
-    ->skip(1)
-    ->get();
+    $user = auth()->user();
 
-return view('dashboard', compact('latest', 'history'));
+    $latest = \App\Models\Recommendation::where('user_id', $user->id)
+        ->latest()
+        ->first();
+
+    $history = \App\Models\Recommendation::where('user_id', $user->id)
+        ->latest()
+        ->skip(1)
+        ->get();
+
+    // normalize user skills ONCE
+    $userSkills = $user->skills->pluck('name')->map(function ($s) {
+        return strtolower(trim($s));
+    })->toArray();
+
+    return view('dashboard', compact('latest', 'history', 'userSkills'));
 
 })->middleware(['auth'])->name('dashboard');
 Route::middleware('auth')->group(function () {

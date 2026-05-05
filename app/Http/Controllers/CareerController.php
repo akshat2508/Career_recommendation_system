@@ -89,11 +89,24 @@ class CareerController extends Controller
 {
     $career = Recommendation::findOrFail($id);
 
-    // security: ensure user owns it
     if ($career->user_id !== auth()->id()) {
         abort(403);
     }
 
-    return view('career.show', compact('career'));
+    $userSkills = auth()->user()->skills->pluck('name')->map(function ($s) {
+        return strtolower(trim($s));
+    })->toArray();
+
+    $required = collect($career->required_skills ?? [])
+        ->map(fn($s) => strtolower(trim($s)))
+        ->toArray();
+
+    $matched = array_intersect($required, $userSkills);
+
+    $matchScore = count($required) > 0
+        ? round((count($matched) / count($required)) * 100)
+        : 0;
+
+    return view('career.show', compact('career', 'userSkills', 'matchScore', 'required'));
 }
 }

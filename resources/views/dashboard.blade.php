@@ -22,6 +22,25 @@
         <p class="text-lg opacity-90 mt-2">
             {{ $latest->description }}
         </p>
+       @php
+    $required = array_map(fn($s) => strtolower(trim($s)), $latest->required_skills ?? []);
+    $userSkillsLower = array_map(fn($s) => strtolower(trim($s)), $userSkills ?? []);
+
+    $matched = array_intersect($required, $userSkillsLower);
+
+    $matchScore = count($required) > 0 ? round((count($matched)/count($required))*100) : 0;
+@endphp
+
+<!-- 🎯 Match Score -->
+<div class="mt-4">
+    <div class="flex justify-between text-sm mb-1">
+        <span>Match</span>
+        <span>{{ $matchScore }}%</span>
+    </div>
+    <div class="w-full bg-white/20 h-2 rounded-full">
+        <div class="bg-white h-2 rounded-full" style="width: {{ $matchScore }}%"></div>
+    </div>
+</div>
 
         <!-- Skills -->
         @if(!empty($latest->required_skills))
@@ -36,6 +55,19 @@
             </div>
         </div>
         @endif
+        <!-- ❌ Missing Skills -->
+<div class="mt-4">
+    <h4 class="text-sm font-semibold mb-1">Skill Gap</h4>
+    <div class="flex flex-wrap gap-2">
+        @foreach($latest->required_skills as $skill)
+            @if(!in_array(strtolower(trim($skill)), $userSkillsLower))
+                <span class="bg-red-400/30 px-2 py-1 rounded text-xs">
+                    {{ $skill }}
+                </span>
+            @endif
+        @endforeach
+    </div>
+</div>
 
         <!-- Roadmap -->
         @if(!empty($latest->roadmap))
