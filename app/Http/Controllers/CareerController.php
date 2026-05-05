@@ -52,6 +52,18 @@ class CareerController extends Controller
         $response = $ai->getCareerRecommendations($data);
 
         $content = $response['choices'][0]['message']['content'] ?? '{}';
+        $content = trim($content);
+
+// remove markdown if exists
+$content = str_replace(['```json', '```'], '', $content);
+
+// find first { and last }
+$start = strpos($content, '{');
+$end = strrpos($content, '}');
+
+$jsonString = ($start !== false && $end !== false)
+    ? substr($content, $start, $end - $start + 1)
+    : '{}';
 
         // 🔥 Extract JSON safely
         preg_match('/\{.*\}/s', $content, $matches);
@@ -80,6 +92,7 @@ class CareerController extends Controller
                 'description' => $career['description'] ?? '',
                 'required_skills' => $career['required_skills'] ?? [],
 'roadmap' => $career['roadmap'] ?? [],
+'why_fit' => $career['why_fit'] ?? '',
             ]);
         }
         return redirect('/dashboard')->with('success', 'Profile + AI done!');

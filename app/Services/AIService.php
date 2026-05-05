@@ -22,6 +22,7 @@ Return ONLY valid JSON (no text outside JSON):
       \"title\": \"Career Name\",
       \"description\": \"Short description\",
       \"required_skills\": [\"skill1\", \"skill2\", \"skill3\"],
+        \"why_fit\": \"Explain why this career suits THIS user specifically\",
       \"roadmap\": [
         \"Step 1\",
         \"Step 2\",

@@ -17,7 +17,8 @@ class Recommendation extends Model
     'career_name',
     'description',
     'required_skills',
-    'roadmap'
+    'roadmap',
+    'why_fit'
 ];
     public function user()
 {

@@ -18,6 +18,10 @@
             <p class="text-lg opacity-90 mt-2">
                 {{ $career->description }}
             </p>
+            <div class="mt-6 bg-blue-50 text-black p-6 rounded-xl">
+    <h3 class="font-semibold mb-2">Why This Career Fits You</h3>
+    <p>{{ $career->why_fit }}</p>
+</div>
 
             <!-- Skills -->
             <div class="mt-6">

@@ -1,9 +1,29 @@
 <x-app-layout>
+    @if($best)
+<div class="mb-8 border-2 border-yellow-400 bg-yellow-50 p-6 rounded-xl">
+
+    <h2 class="text-xl font-bold text-yellow-700 mb-2">
+        ⭐ Recommended For You
+    </h2>
+
+    <h3 class="text-2xl font-bold">
+        {{ $best->career_name }}
+    </h3>
+
+    <p class="text-gray-700 mt-2">
+        {{ $best->description }}
+    </p>
+
+    <div class="mt-3 text-sm font-semibold">
+        Match: {{ $best->matchScore }}%
+    </div>
+
+</div>
+@endif
 <div class="p-6 max-w-7xl mx-auto">
 
     <!-- 🔥 Latest Recommendation -->
-    @if($latest)
-
+@if($latest && (!$best || $latest->id !== $best->id))
     <!-- Tags -->
     <div class="mt-6 flex gap-3 flex-wrap">
         <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">AI Generated</span>
@@ -11,12 +31,20 @@
     </div>
 
     <!-- Main Card -->
-    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-8 rounded-2xl shadow-lg mt-4">
-
+<a href="{{ route('career.show', $latest->id) }}">
+<div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-8 rounded-2xl shadow-lg mt-4 cursor-pointer hover:shadow-xl transition">
         <!-- Title -->
         <h1 class="text-3xl font-bold mb-2">
             {{ $latest->career_name }}
         </h1>
+        @if(!empty($latest->why_fit))
+<div class="mt-4 bg-white text-black p-4 rounded">
+    <h4 class="font-semibold text-sm mb-1">Why this suits you</h4>
+    <p class="text-sm">
+        {{ \Illuminate\Support\Str::limit($latest->why_fit, 120) }}
+    </p>
+</div>
+@endif
 
         <!-- Description -->
         <p class="text-lg opacity-90 mt-2">
@@ -41,6 +69,13 @@
         <div class="bg-white h-2 rounded-full" style="width: {{ $matchScore }}%"></div>
     </div>
 </div>
+@if($matchScore >= 70)
+    <p class="text-green-200 text-sm mt-1">Strong match 🚀</p>
+@elseif($matchScore >= 40)
+    <p class="text-yellow-200 text-sm mt-1">Moderate match</p>
+@else
+    <p class="text-red-200 text-sm mt-1">Needs improvement</p>
+@endif
 
         <!-- Skills -->
         @if(!empty($latest->required_skills))
@@ -49,7 +84,7 @@
             <div class="flex flex-wrap gap-2">
                 @foreach($latest->required_skills as $skill)
                     <span class="bg-white/20 px-3 py-1 rounded-full text-sm">
-                        {{ $skill }}
+                       {{ ucfirst($skill) }}
                     </span>
                 @endforeach
             </div>
@@ -57,16 +92,25 @@
         @endif
         <!-- ❌ Missing Skills -->
 <div class="mt-4">
-    <h4 class="text-sm font-semibold mb-1">Skill Gap</h4>
-    <div class="flex flex-wrap gap-2">
-        @foreach($latest->required_skills as $skill)
-            @if(!in_array(strtolower(trim($skill)), $userSkillsLower))
+    <h4 class="text-sm font-semibold mb-2">Skill Gap</h4>
+
+    @php
+        $missing = array_filter($latest->required_skills, function($skill) use ($userSkills) {
+            return !in_array(strtolower(trim($skill)), $userSkills);
+        });
+    @endphp
+
+    @if(count($missing) > 0)
+        <div class="flex flex-wrap gap-2">
+            @foreach($missing as $skill)
                 <span class="bg-red-400/30 px-2 py-1 rounded text-xs">
-                    {{ $skill }}
+                    {{ ucfirst($skill) }}
                 </span>
-            @endif
-        @endforeach
-    </div>
+            @endforeach
+        </div>
+    @else
+        <p class="text-green-200 text-sm">You already have all required skills 🎉</p>
+    @endif
 </div>
 
         <!-- Roadmap -->
@@ -89,7 +133,7 @@
             Generated on {{ $latest->created_at->format('d M Y, h:i A') }}
         </p>
 
-    </div>
+    </div></a>
 
     @else
 <div class="text-center mt-10">
@@ -135,8 +179,7 @@
             <div class="mt-3 flex flex-wrap gap-2">
                 @foreach($item->required_skills as $skill)
                     <span class="bg-gray-200 px-2 py-1 rounded text-xs">
-                        {{ $skill }}
-                    </span>
+{{ ucfirst($skill) }}                    </span>
                 @endforeach
             </div>
             @endif

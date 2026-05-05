@@ -24,23 +24,42 @@ Route::get('/dashboard', function () {
 
     $user = auth()->user();
 
-    $latest = \App\Models\Recommendation::where('user_id', $user->id)
-        ->latest()
-        ->first();
+    $recommendations = \App\Models\Recommendation::where('user_id', $user->id)->get();
 
-    $history = \App\Models\Recommendation::where('user_id', $user->id)
-        ->latest()
-        ->skip(1)
-        ->get();
+    $userSkills = $user->skills->pluck('name')->map(fn($s) => strtolower(trim($s)))->toArray();
 
-    // normalize user skills ONCE
-    $userSkills = $user->skills->pluck('name')->map(function ($s) {
-        return strtolower(trim($s));
-    })->toArray();
+    $best = null;
+    $bestScore = -1;
 
-    return view('dashboard', compact('latest', 'history', 'userSkills'));
+    foreach ($recommendations as $rec) {
+        $required = collect($rec->required_skills ?? [])
+            ->map(fn($s) => strtolower(trim($s)))
+            ->toArray();
+
+        $matched = array_intersect($required, $userSkills);
+
+        $score = count($required) > 0 ? round((count($matched)/count($required))*100) : 0;
+
+        if ($score > $bestScore) {
+            $bestScore = $score;
+            $best = $rec;
+        }
+
+        $rec->matchScore = $score;
+    }
+
+    // ✅ ADD THIS
+    $latest = $recommendations->sortByDesc('created_at')->first();
+
+    return view('dashboard', [
+        'best' => $best,
+        'latest' => $latest,
+        'history' => $recommendations,
+        'userSkills' => $userSkills
+    ]);
 
 })->middleware(['auth'])->name('dashboard');
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
