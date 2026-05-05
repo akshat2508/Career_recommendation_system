@@ -8,6 +8,7 @@ use App\Models\Skill;
 use App\Models\Interest;
 use App\Services\AIService;
 use App\Models\Recommendation;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class CareerController extends Controller
 {
@@ -121,5 +122,41 @@ $jsonString = ($start !== false && $end !== false)
         : 0;
 
     return view('career.show', compact('career', 'userSkills', 'matchScore', 'required'));
+}
+
+public function exportPdf($id)
+{
+    $career = Recommendation::findOrFail($id);
+
+    // security check
+    if ($career->user_id !== auth()->id()) {
+        abort(403);
+    }
+
+    // normalize user skills (for gap + match in PDF)
+    $userSkills = auth()->user()->skills
+        ->pluck('name')
+        ->map(fn($s) => strtolower(trim($s)))
+        ->toArray();
+
+    $required = collect($career->required_skills ?? [])
+        ->map(fn($s) => strtolower(trim($s)))
+        ->toArray();
+
+    $matched = array_intersect($required, $userSkills);
+
+    $matchScore = count($required) > 0
+        ? round((count($matched) / count($required)) * 100)
+        : 0;
+
+    $missing = array_filter($required, fn($s) => !in_array($s, $userSkills));
+
+    $pdf = Pdf::loadView('career.pdf', compact(
+        'career',
+        'matchScore',
+        'missing'
+    ));
+
+    return $pdf->download('career-report-'.$career->id.'.pdf');
 }
 }

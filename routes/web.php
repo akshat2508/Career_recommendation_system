@@ -74,4 +74,8 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/career/{id}', [CareerController::class, 'show'])->name('career.show');
 
+Route::get('/career/{id}/pdf', [CareerController::class, 'exportPdf'])
+    ->name('career.pdf')
+    ->middleware('auth');
+    
 require __DIR__.'/auth.php';

@@ -13,6 +13,7 @@
             <h1 class="text-3xl font-bold mb-2">
                 {{ $career->career_name }}
             </h1>
+          
 
             <!-- Description -->
             <p class="text-lg opacity-90 mt-2">
@@ -106,6 +107,9 @@
             </p>
 
         </div>
-
     </div>
+    <a href="{{ route('career.pdf', $career->id) }}"
+     class="bg-green-600 text-white px-4 py-2 rounded mt-4 inline-block">
+     Download PDF Report
+  </a>
 </x-app-layout>
