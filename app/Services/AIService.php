@@ -8,9 +8,29 @@ class AIService
 {
     public function getCareerRecommendations($data)
     {
-        $prompt = "User has skills: {$data['skills']}, interests: {$data['interests']}, CGPA: {$data['cgpa']}.
-        Suggest 3 career paths with required skills and roadmap in clean readable format.";
+        $prompt = "
+User Profile:
+Skills: {$data['skills']}
+Interests: {$data['interests']}
+CGPA: {$data['cgpa']}
 
+Return ONLY valid JSON (no text outside JSON):
+
+{
+  \"careers\": [
+    {
+      \"title\": \"Career Name\",
+      \"description\": \"Short description\",
+      \"required_skills\": [\"skill1\", \"skill2\", \"skill3\"],
+      \"roadmap\": [
+        \"Step 1\",
+        \"Step 2\",
+        \"Step 3\"
+      ]
+    }
+  ]
+}
+";
         $response = Http::withHeaders([
             'Authorization' => 'Bearer ' . env('GROQ_API_KEY'),
             'Content-Type' => 'application/json',

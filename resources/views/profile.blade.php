@@ -1,20 +1,50 @@
-<form method="POST" action="{{ route('career.store') }}">
-    @csrf
+<x-app-layout>
+<div class="max-w-3xl mx-auto p-6">
 
-    <label>CGPA:</label>
-    <input type="text" name="cgpa"><br>
+    <h1 class="text-3xl font-bold mb-6">Build Your Career Profile</h1>
 
-    <label>Branch:</label>
-    <input type="text" name="branch"><br>
+    <form action="{{ route('career.store') }}" method="POST" class="space-y-6">
+        @csrf
 
-    <label>Education Level:</label>
-    <input type="text" name="education_level"><br>
+        <!-- CGPA -->
+        <div>
+            <label class="block font-semibold">CGPA</label>
+            <input type="number" step="0.1" name="cgpa"
+                class="w-full border rounded-lg p-3 mt-2"
+                placeholder="Enter your CGPA">
+        </div>
 
-    <label>Skills (comma separated):</label>
-    <input type="text" name="skills"><br>
+        <!-- Branch -->
+        <div>
+            <label class="block font-semibold">Branch</label>
+            <input type="text" name="branch"
+                class="w-full border rounded-lg p-3 mt-2"
+                placeholder="e.g. CSE, IT">
+        </div>
 
-    <label>Interests (comma separated):</label>
-    <input type="text" name="interests"><br>
+        <!-- Skills -->
+        <div>
+            <label class="block font-semibold">Skills (comma separated)</label>
+            <input type="text" name="skills"
+                class="w-full border rounded-lg p-3 mt-2"
+                placeholder="e.g. Java, Python, React">
+        </div>
 
-    <button type="submit">Save Profile</button>
-</form>
+        <!-- Interests -->
+        <div>
+            <label class="block font-semibold">Interests</label>
+            <input type="text" name="interests"
+                class="w-full border rounded-lg p-3 mt-2"
+                placeholder="e.g. AI, Web Dev, Data Science">
+        </div>
+
+        <!-- Submit -->
+        <button type="submit"
+            class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700 transition">
+            Generate Career Path 🚀
+        </button>
+
+    </form>
+
+</div>
+</x-app-layout>

@@ -1,58 +1,122 @@
-@php use Illuminate\Support\Str; @endphp
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="text-2xl font-bold text-gray-800">
-            🚀 AI Career Dashboard
-        </h2>
-    </x-slot>
+<div class="p-6 max-w-7xl mx-auto">
 
-    <div class="py-10">
-        <div class="max-w-6xl mx-auto space-y-10">
+    <!-- 🔥 Latest Recommendation -->
+    @if($latest)
 
-            <!-- 🔥 Latest Recommendation -->
-            <div>
-                <h2 class="text-xl font-semibold text-indigo-600 mb-4">
-                    🔥 Latest Recommendation
-                </h2>
+    <!-- Tags -->
+    <div class="mt-6 flex gap-3 flex-wrap">
+        <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm">AI Generated</span>
+        <span class="bg-indigo-100 text-indigo-700 px-3 py-1 rounded-full text-sm">Career Path</span>
+    </div>
 
-                @if($latest)
-                    <div class="bg-white shadow-lg rounded-xl p-6 border">
-                        <div class="whitespace-pre-line text-gray-700">
-                            {{ $latest->description }}
-                        </div>
-                    </div>
-                @endif
+    <!-- Main Card -->
+    <div class="bg-gradient-to-r from-blue-500 to-indigo-600 text-white p-8 rounded-2xl shadow-lg mt-4">
+
+        <!-- Title -->
+        <h1 class="text-3xl font-bold mb-2">
+            {{ $latest->career_name }}
+        </h1>
+
+        <!-- Description -->
+        <p class="text-lg opacity-90 mt-2">
+            {{ $latest->description }}
+        </p>
+
+        <!-- Skills -->
+        @if(!empty($latest->required_skills))
+        <div class="mt-6">
+            <h3 class="font-semibold mb-2">Required Skills</h3>
+            <div class="flex flex-wrap gap-2">
+                @foreach($latest->required_skills as $skill)
+                    <span class="bg-white/20 px-3 py-1 rounded-full text-sm">
+                        {{ $skill }}
+                    </span>
+                @endforeach
             </div>
+        </div>
+        @endif
 
-            <!-- 📜 History -->
-            <div>
-                <h2 class="text-xl font-semibold text-gray-700 mb-4">
-                    📜 Previous Recommendations
-                </h2>
+        <!-- Roadmap -->
+        @if(!empty($latest->roadmap))
+        <div class="mt-6">
+            <h3 class="font-semibold mb-2">Roadmap</h3>
+            <ul class="space-y-2">
+                @foreach($latest->roadmap as $step)
+                    <li class="flex items-start gap-2">
+                        <span class="bg-white/30 px-2 rounded">→</span>
+                        <span>{{ $step }}</span>
+                    </li>
+                @endforeach
+            </ul>
+        </div>
+        @endif
 
-                <div class="grid gap-4">
-                    @foreach($history as $rec)
-                        <div class="bg-gray-50 border rounded-lg p-4 shadow-sm hover:shadow-md transition">
-                            <div class="text-sm text-gray-500 mb-2">
-                                {{ $rec->created_at->format('d M Y, h:i A') }}
-                            </div>
+        <!-- Timestamp -->
+        <p class="text-sm mt-6 opacity-75">
+            Generated on {{ $latest->created_at->format('d M Y, h:i A') }}
+        </p>
 
-                            <div class="whitespace-pre-line text-gray-700 text-sm">
-                                {{ Str::limit($rec->description, 300) }}
-                            </div>
-                        </div>
-                    @endforeach
-                </div>
+    </div>
+
+    @else
+<div class="text-center mt-10">
+
+    <h2 class="text-2xl font-semibold mb-4">
+        No recommendations yet
+    </h2>
+
+    <p class="text-gray-600 mb-6">
+        Build your profile to get AI-powered career suggestions 🚀
+    </p>
+
+    <a href="{{ route('career.create') }}"
+       class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+        Generate Career Path
+    </a>
+
+</div>    @endif
+
+
+    <!-- 📜 History -->
+   <!-- 📜 History -->
+<h2 class="text-2xl font-semibold mt-10 mb-4">History</h2>
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+    @foreach($history as $item)
+    <a href="{{ route('career.show', $item->id) }}">
+        <div class="bg-white p-6 rounded-xl shadow hover:shadow-lg transition cursor-pointer">
+
+            <!-- Title -->
+            <h3 class="text-xl font-bold">
+                {{ $item->career_name }}
+            </h3>
+
+            <!-- Description -->
+            <p class="text-gray-600 mt-2 text-sm">
+                {{ $item->description }}
+            </p>
+
+            <!-- Skills -->
+            @if(!empty($item->required_skills))
+            <div class="mt-3 flex flex-wrap gap-2">
+                @foreach($item->required_skills as $skill)
+                    <span class="bg-gray-200 px-2 py-1 rounded text-xs">
+                        {{ $skill }}
+                    </span>
+                @endforeach
             </div>
+            @endif
 
-            <!-- ➕ Button -->
-            <div class="text-center">
-                <a href="{{ route('career.create') }}"
-                   class="bg-indigo-600 text-white px-6 py-3 rounded-lg shadow hover:bg-indigo-700 transition">
-                    ➕ Generate New Recommendation
-                </a>
-            </div>
+            <!-- Date -->
+            <p class="text-xs text-gray-400 mt-4">
+                {{ $item->created_at->format('d M Y') }}
+            </p>
 
         </div>
-    </div>
+    </a>
+    @endforeach
+
+</div>
 </x-app-layout>

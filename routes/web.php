@@ -46,4 +46,6 @@ Route::middleware('auth')->group(function () {
     Route::post('/career', [CareerController::class, 'store'])->name('career.store');
 });
 
+Route::get('/career/{id}', [CareerController::class, 'show'])->name('career.show');
+
 require __DIR__.'/auth.php';

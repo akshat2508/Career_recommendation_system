@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Recommendation extends Model
 {
     use HasFactory;
+    protected $casts = [
+    'required_skills' => 'array',
+    'roadmap' => 'array',
+];
     protected $fillable = [
     'user_id',
     'career_name',

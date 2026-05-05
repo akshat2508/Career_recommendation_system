@@ -51,13 +51,49 @@ class CareerController extends Controller
 
         $response = $ai->getCareerRecommendations($data);
 
-        $content = $response['choices'][0]['message']['content'] ?? 'No response';
+        $content = $response['choices'][0]['message']['content'] ?? '{}';
 
-Recommendation::create([
-    'user_id' => $user->id,
-    'career_name' => 'AI Generated',
-    'description' => $content,
-]);
+        // 🔥 Extract JSON safely
+        preg_match('/\{.*\}/s', $content, $matches);
+        $jsonString = $matches[0] ?? '{}';
+
+        // 🔥 Decode
+        $parsed = json_decode($jsonString, true);
+
+        // 🔥 Debug if failed
+        if (!$parsed) {
+            dd("JSON FAILED", $content);
+        }
+
+        // 🔥 Normalize key (important)
+        $careers = $parsed['careers'] ?? $parsed['career'] ?? null;
+
+        if (!$careers) {
+            dd("NO CAREERS KEY", $parsed);
+        }
+
+        // 🔥 Save
+        foreach ($careers as $career) {
+            Recommendation::create([
+                'user_id' => $user->id,
+                'career_name' => $career['title'] ?? 'Unknown',
+                'description' => $career['description'] ?? '',
+                'required_skills' => $career['required_skills'] ?? [],
+'roadmap' => $career['roadmap'] ?? [],
+            ]);
+        }
         return redirect('/dashboard')->with('success', 'Profile + AI done!');
     }
+
+    public function show($id)
+{
+    $career = Recommendation::findOrFail($id);
+
+    // security: ensure user owns it
+    if ($career->user_id !== auth()->id()) {
+        abort(403);
+    }
+
+    return view('career.show', compact('career'));
+}
 }
