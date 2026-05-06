@@ -240,6 +240,6 @@ public function personalitySubmit(Request $request)
         ['personality' => $scores]
     );
 
-    return redirect('/dashboard')->with('success', 'Personality saved!');
+   return redirect()->route('career.create')->with('success', 'Personality saved!');
 }
 }

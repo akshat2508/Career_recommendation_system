@@ -1,3 +1,25 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+.brutal {
+    border: 3px solid black;
+    box-shadow: 6px 6px 0px black;
+}
+
+.brutal-sm {
+    border: 2px solid black;
+    box-shadow: 4px 4px 0px black;
+}
+
+.brutal-btn {
+    border: 3px solid black;
+    box-shadow: 4px 4px 0px black;
+    transition: all 0.15s ease;
+}
+
+.brutal-btn:hover {
+    transform: translate(-2px, -2px);
+    box-shadow: 6px 6px 0px black;
+}

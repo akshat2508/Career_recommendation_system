@@ -10,27 +10,45 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
-
+            <script src="//unpkg.com/alpinejs" defer></script>
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
-    <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
-            @include('layouts.navigation')
+    <body class="font-sans bg-white text-black">
+    <div class="min-h-screen">
 
-            <!-- Page Heading -->
-            @if (isset($header))
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endif
+        <!-- NAV -->
+        <nav class="brutal-sm bg-white px-6 py-4 flex justify-between items-center">
+            <h1 class="text-xl font-bold tracking-tight">
+                CareerAI
+            </h1>
 
-            <!-- Page Content -->
-            <main>
+            <div class="space-x-4">
+                <a href="/dashboard" class="font-semibold hover:underline">Dashboard</a>
+                <a href="/profile" class="font-semibold hover:underline">Profile</a>
+                <form method="POST" action="{{ route('logout') }}" class="inline">
+                    @csrf
+                    <button class="brutal-btn px-4 py-1 text-sm bg-yellow-300">Logout</button>
+                </form>
+            </div>
+        </nav>
+
+        <!-- HEADER -->
+        @if (isset($header))
+            <header class="px-6 py-6">
+                <div class="max-w-5xl mx-auto">
+                    {{ $header }}
+                </div>
+            </header>
+        @endif
+
+        <!-- CONTENT -->
+        <main class="px-6 py-6">
+            <div class="max-w-5xl mx-auto">
                 {{ $slot }}
-            </main>
-        </div>
-    </body>
+            </div>
+        </main>
+
+    </div>
+</body>
 </html>
