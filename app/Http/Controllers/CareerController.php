@@ -10,6 +10,13 @@ use App\Services\AIService;
 use App\Models\Recommendation;
 use Barryvdh\DomPDF\Facade\Pdf;
 
+$careerPersonalityMap = [
+'devops engineer' => ['analytical', 'structured'],
+'cloud solutions architect' => ['analytical', 'structured'],
+'ui/ux designer' => ['creative'],
+'product manager' => ['social', 'analytical'],
+'data scientist' => ['analytical'],
+];
 class CareerController extends Controller
 {
     public function create()
@@ -43,12 +50,16 @@ class CareerController extends Controller
 
         // 🔥 AI PART
         $ai = new AIService();
+        $personality = auth()->user()->profile->personality ?? [];
 
-        $data = [
-            'skills' => $request->skills,
-            'interests' => $request->interests,
-            'cgpa' => $request->cgpa
-        ];
+$data = [
+    'skills' => $request->skills,
+    'interests' => $request->interests,
+    'cgpa' => $request->cgpa,
+    'personality' => json_encode($personality)
+];
+
+       
 
         $response = $ai->getCareerRecommendations($data);
 
@@ -158,5 +169,77 @@ public function exportPdf($id)
     ));
 
     return $pdf->download('career-report-'.$career->id.'.pdf');
+}
+public function chat(Request $request)
+{
+    $message = strtolower($request->message);
+
+    $user = auth()->user();
+
+    $skills = $user->skills->pluck('name')->join(', ');
+    $interests = $user->interests->pluck('name')->join(', ');
+
+    // 🔥 RULE-BASED INTENT HANDLING
+
+    if (str_contains($message, 'roadmap')) {
+        $intent = "Explain a step-by-step roadmap clearly.";
+    } 
+    elseif (str_contains($message, 'skills')) {
+        $intent = "List important skills and explain them briefly.";
+    } 
+    elseif (str_contains($message, 'career')) {
+        $intent = "Suggest suitable careers with reasoning.";
+    } 
+    elseif (str_contains($message, 'start')) {
+        $intent = "Explain how to start from beginner level.";
+    } 
+    else {
+        $intent = "Answer like a helpful career mentor.";
+    }
+
+    $prompt = "
+User Profile:
+Skills: $skills
+Interests: $interests
+
+User Question: {$request->message}
+
+Instruction: $intent
+
+Answer clearly, structured, and practical. Avoid long paragraphs.
+";
+
+    $ai = new \App\Services\AIService();
+
+    $response = $ai->getCareerRecommendations([
+        'custom_prompt' => $prompt
+    ]);
+
+    $reply = $response['choices'][0]['message']['content'] ?? 'No response';
+
+    return response()->json(['reply' => $reply]);
+}
+
+public function personalityForm()
+{
+    return view('personality');
+}
+
+public function personalitySubmit(Request $request)
+{
+    $answers = $request->answers;
+
+    $scores = [];
+
+    foreach ($answers as $type => $value) {
+        $scores[$type] = (int) $value;
+    }
+
+    Profile::updateOrCreate(
+        ['user_id' => auth()->id()],
+        ['personality' => $scores]
+    );
+
+    return redirect('/dashboard')->with('success', 'Personality saved!');
 }
 }

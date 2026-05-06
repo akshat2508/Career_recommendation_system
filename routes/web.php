@@ -28,25 +28,50 @@ Route::get('/dashboard', function () {
 
     $userSkills = $user->skills->pluck('name')->map(fn($s) => strtolower(trim($s)))->toArray();
 
-    $best = null;
-    $bestScore = -1;
+    $best = $recommendations->first();
+$latest = $recommendations->sortByDesc('created_at')->first();
+    $personality = $user->profile->personality ?? [];
 
-    foreach ($recommendations as $rec) {
-        $required = collect($rec->required_skills ?? [])
-            ->map(fn($s) => strtolower(trim($s)))
-            ->toArray();
+foreach ($recommendations as $rec) {
 
-        $matched = array_intersect($required, $userSkills);
+    // 🔹 Skill match
+    $required = collect($rec->required_skills ?? [])
+        ->map(fn($s) => strtolower(trim($s)))
+        ->toArray();
 
-        $score = count($required) > 0 ? round((count($matched)/count($required))*100) : 0;
+    $matched = array_intersect($required, $userSkills);
 
-        if ($score > $bestScore) {
-            $bestScore = $score;
-            $best = $rec;
+    $skillScore = count($required) > 0
+        ? (count($matched) / count($required)) * 100
+        : 0;
+
+    // 🔹 Personality match
+    $careerKey = strtolower(trim($rec->career_name));
+    $personalityScore = 0;
+
+    if (isset($careerPersonalityMap[$careerKey])) {
+
+        $traits = $careerPersonalityMap[$careerKey];
+        $total = count($traits);
+        $matchedTraits = 0;
+
+        foreach ($traits as $trait) {
+            if (($personality[$trait] ?? 0) >= 3) {
+                $matchedTraits++;
+            }
         }
 
-        $rec->matchScore = $score;
+        $personalityScore = ($total > 0)
+            ? ($matchedTraits / $total) * 100
+            : 0;
     }
+
+    // 🔥 FINAL SCORE
+    $finalScore = round(($skillScore * 0.7) + ($personalityScore * 0.3));
+
+    $rec->matchScore = $finalScore;
+}
+$recommendations = $recommendations->sortByDesc('matchScore')->values();
 
     // ✅ ADD THIS
     $latest = $recommendations->sortByDesc('created_at')->first();
@@ -78,4 +103,7 @@ Route::get('/career/{id}/pdf', [CareerController::class, 'exportPdf'])
     ->name('career.pdf')
     ->middleware('auth');
     
+Route::post('/chat', [CareerController::class, 'chat'])->name('career.chat');
+Route::get('/personality', [CareerController::class, 'personalityForm'])->name('personality.form');
+Route::post('/personality', [CareerController::class, 'personalitySubmit'])->name('personality.submit');
 require __DIR__.'/auth.php';

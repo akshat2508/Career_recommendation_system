@@ -12,7 +12,13 @@ class Profile extends Model
     'user_id',
     'cgpa',
     'branch',
-    'education_level'
+    'education_level',
+    'personality'
+
+];
+
+protected $casts = [
+    'personality' => 'array',
 ];
     public function user()
 {

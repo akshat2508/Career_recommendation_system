@@ -194,4 +194,65 @@
     @endforeach
 
 </div>
+<div class="fixed bottom-6 right-6 w-80 bg-white shadow-2xl rounded-xl overflow-hidden">
+
+    <!-- Header -->
+    <div class="bg-blue-600 text-white p-3 font-semibold">
+        Career Assistant 🤖
+    </div>
+
+    <!-- Chat box -->
+    <div id="chat-box" class="h-64 overflow-y-auto p-3 text-sm space-y-2 bg-gray-50"></div>
+
+    <!-- Input -->
+    <div class="p-2 border-t">
+        <input id="chat-input" type="text"
+            class="w-full border p-2 rounded"
+            placeholder="Ask something...">
+    </div>
+
+</div>
+
+<script>
+document.getElementById('chat-input').addEventListener('keypress', async function(e) {
+    if (e.key === 'Enter') {
+
+        let msg = this.value.trim();
+        if (!msg) return;
+
+        this.value = '';
+
+        let box = document.getElementById('chat-box');
+
+        box.innerHTML += `
+            <div class="text-right">
+                <span class="bg-blue-500 text-white px-3 py-1 rounded inline-block">
+                    ${msg}
+                </span>
+            </div>
+        `;
+
+        let res = await fetch('/chat', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': '{{ csrf_token() }}'
+            },
+            body: JSON.stringify({ message: msg })
+        });
+
+        let data = await res.json();
+
+        box.innerHTML += `
+            <div>
+                <span class="bg-gray-200 px-3 py-1 rounded inline-block">
+                    ${data.reply}
+                </span>
+            </div>
+        `;
+
+        box.scrollTop = box.scrollHeight;
+    }
+});
+</script>
 </x-app-layout>
