@@ -23,3 +23,15 @@
     transform: translate(-2px, -2px);
     box-shadow: 6px 6px 0px black;
 }
+
+.dots::after {
+    content: '';
+    animation: dots 1.5s steps(3, end) infinite;
+}
+
+@keyframes dots {
+    0% { content: ''; }
+    33% { content: '.'; }
+    66% { content: '..'; }
+    100% { content: '...'; }
+}

@@ -19,19 +19,44 @@
 
         <!-- NAV -->
         <nav class="brutal-sm bg-white px-6 py-4 flex justify-between items-center">
-            <h1 class="text-xl font-bold tracking-tight">
-                CareerAI
-            </h1>
 
-            <div class="space-x-4">
-                <a href="/dashboard" class="font-semibold hover:underline">Dashboard</a>
-                <a href="/profile" class="font-semibold hover:underline">Profile</a>
-                <form method="POST" action="{{ route('logout') }}" class="inline">
-                    @csrf
-                    <button class="brutal-btn px-4 py-1 text-sm bg-yellow-300">Logout</button>
-                </form>
-            </div>
-        </nav>
+    <!-- LOGO -->
+    <a href="/dashboard" class="text-xl font-bold tracking-tight">
+        CareerAI
+    </a>
+
+    @php
+        $hasPersonality = auth()->user()->profile && auth()->user()->profile->personality;
+    @endphp
+
+    <!-- NAV LINKS -->
+    <div class="flex items-center gap-6">
+
+        <a href="/dashboard" class="font-semibold hover:underline">
+            Dashboard
+        </a>
+
+        <!-- 🔥 MAIN FEATURE -->
+        <a href="{{ $hasPersonality ? route('career.create') : route('personality') }}"
+           class="brutal-btn px-4 py-1 bg-blue-300 font-semibold">
+            Analyze
+        </a>
+
+        <a href="{{ route('profile.edit') }}" class="font-semibold hover:underline">
+            Profile
+        </a>
+
+        <!-- LOGOUT -->
+        <form method="POST" action="{{ route('logout') }}">
+            @csrf
+            <button class="brutal-btn px-4 py-1 text-sm bg-yellow-300">
+                Logout
+            </button>
+        </form>
+
+    </div>
+
+</nav>
 
         <!-- HEADER -->
         @if (isset($header))

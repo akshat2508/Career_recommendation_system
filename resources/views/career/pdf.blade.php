@@ -3,118 +3,155 @@
 <head>
     <meta charset="UTF-8">
     <title>Career Report</title>
+
     <style>
         body {
             font-family: DejaVu Sans, sans-serif;
-            padding: 20px;
-            color: #333;
+            padding: 30px;
+            color: #111;
+        }
+
+        /* HEADER */
+        .header {
+            border-bottom: 3px solid #000;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
         }
 
         h1 {
-            color: #1e40af;
-            margin-bottom: 5px;
+            font-size: 26px;
+            margin: 0;
+        }
+
+        .subtitle {
+            margin-top: 5px;
+            color: #555;
+        }
+
+        /* SECTION */
+        .section {
+            margin-top: 25px;
         }
 
         h2 {
-            margin-top: 20px;
-            color: #111827;
-            border-bottom: 1px solid #ddd;
-            padding-bottom: 5px;
+            font-size: 16px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #ccc;
+            padding-bottom: 4px;
         }
 
-        .section {
-            margin-top: 15px;
-        }
-
+        /* BOX */
         .box {
-            margin-top: 10px;
+            border: 1px solid #000;
             padding: 12px;
-            border-radius: 6px;
-            background: #f9fafb;
-            border: 1px solid #e5e7eb;
+            background: #fafafa;
         }
 
-        .skill {
+        /* SKILLS */
+        .tag {
             display: inline-block;
-            background: #e0f2fe;
-            padding: 5px 10px;
-            border-radius: 20px;
+            border: 1px solid #000;
+            padding: 4px 8px;
             margin: 3px;
             font-size: 12px;
         }
 
         .missing {
-            background: #fee2e2;
+            background: #fdd;
         }
 
-        .match {
-            font-size: 22px;
+        /* SCORE */
+        .score {
+            font-size: 28px;
             font-weight: bold;
-            color: #2563eb;
         }
 
+        /* ROADMAP */
+        ol {
+            padding-left: 18px;
+        }
+
+        li {
+            margin-bottom: 6px;
+        }
+
+        /* FOOTER */
         .footer {
-            margin-top: 30px;
-            font-size: 12px;
-            color: #6b7280;
+            margin-top: 40px;
+            font-size: 11px;
+            color: #777;
+            border-top: 1px solid #ccc;
+            padding-top: 10px;
         }
     </style>
 </head>
+
 <body>
 
-<h1>{{ $career->career_name }}</h1>
-<p>{{ $career->description }}</p>
-
-<div class="section">
-    <h2>Why This Career Fits You</h2>
-    <div class="box">
-        {{ $career->why_fit }}
+    <!-- 🔥 HEADER -->
+    <div class="header">
+        <h1>{{ $career->career_name }}</h1>
+        <div class="subtitle">
+            AI-generated career recommendation report
+        </div>
     </div>
-</div>
 
-<div class="section">
-    <h2>Match Score</h2>
-    <div class="box">
-        <span class="match">{{ $matchScore }}%</span>
+    <!-- 🧠 WHY FIT -->
+    <div class="section">
+        <h2>Why This Career Fits You</h2>
+        <div class="box">
+            {{ $career->why_fit }}
+        </div>
     </div>
-</div>
 
-<div class="section">
-    <h2>Required Skills</h2>
-    <div class="box">
-        @foreach($career->required_skills as $skill)
-            <span class="skill">{{ ucfirst($skill) }}</span>
-        @endforeach
+    <!-- 🎯 MATCH SCORE -->
+    <div class="section">
+        <h2>Match Score</h2>
+        <div class="box">
+            <span class="score">{{ $matchScore }}%</span>
+        </div>
     </div>
-</div>
 
-<div class="section">
-    <h2>Skill Gap</h2>
-    <div class="box">
-        @if(count($missing) > 0)
-            @foreach($missing as $skill)
-                <span class="skill missing">{{ ucfirst($skill) }}</span>
+    <!-- 🧩 REQUIRED SKILLS -->
+    <div class="section">
+        <h2>Required Skills</h2>
+        <div class="box">
+            @foreach($career->required_skills as $skill)
+                <span class="tag">{{ ucfirst($skill) }}</span>
             @endforeach
-        @else
-            You already have all required skills 🎉
-        @endif
+        </div>
     </div>
-</div>
 
-<div class="section">
-    <h2>Roadmap</h2>
-    <div class="box">
-        <ol>
-            @foreach($career->roadmap as $step)
-                <li>{{ $step }}</li>
-            @endforeach
-        </ol>
+    <!-- ❌ SKILL GAP -->
+    <div class="section">
+        <h2>Skill Gap</h2>
+        <div class="box">
+            @if(count($missing) > 0)
+                @foreach($missing as $skill)
+                    <span class="tag missing">{{ ucfirst($skill) }}</span>
+                @endforeach
+            @else
+                You already meet all requirements.
+            @endif
+        </div>
     </div>
-</div>
 
-<div class="footer">
-    Generated on {{ now()->format('d M Y, h:i A') }}
-</div>
+    <!-- 🛣️ ROADMAP -->
+    <div class="section">
+        <h2>Career Roadmap</h2>
+        <div class="box">
+            <ol>
+                @foreach($career->roadmap as $step)
+                    <li>{{ $step }}</li>
+                @endforeach
+            </ol>
+        </div>
+    </div>
+
+    <!-- 📅 FOOTER -->
+    <div class="footer">
+        Generated on {{ now()->format('d M Y, h:i A') }}
+    </div>
 
 </body>
 </html>

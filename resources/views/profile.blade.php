@@ -1,5 +1,36 @@
 <x-app-layout>
 
+<div x-data="loadingHandler()" class="relative">
+
+    <!-- 🔥 LOADER -->
+   <div x-show="loading" x-cloak
+     class="fixed inset-0 bg-white z-50 flex items-center justify-center">
+
+    <div class="text-center space-y-8 w-full max-w-md">
+
+        <!-- TITLE -->
+        <div class="brutal p-6">
+            <h2 class="text-xl font-bold">
+                AI is analyzing your profile<span class="dots"></span>
+            </h2>
+
+            <!-- TYPING TEXT -->
+            <p class="text-sm mt-3 text-gray-600 transition-all duration-300"
+               x-text="message">
+            </p>
+        </div>
+
+        <!-- PROGRESS -->
+        <div class="w-full h-3 bg-gray-200 overflow-hidden">
+            <div class="h-3 bg-black transition-all duration-500 ease-out"
+                 :style="'width:' + progress + '%'"></div>
+        </div>
+
+        <!-- FAKE PERCENT -->
+        <div class="text-sm font-semibold" x-text="progress + '%'"></div>
+
+    </div>
+</div>
 <div 
     x-data="{ step: 1 }" 
     class="max-w-3xl mx-auto p-6 space-y-8"
@@ -26,8 +57,7 @@
     </div>
 
     <!-- FORM -->
-    <form action="{{ route('career.store') }}" method="POST">
-        @csrf
+<form action="{{ route('career.store') }}" method="POST"  @submit.prevent="startLoading($event)">        @csrf
 
         <!-- STEP 1 -->
         <div x-show="step === 1" x-transition class="brutal p-6">
@@ -115,5 +145,54 @@
     </form>
 
 </div>
+<script>
+function loadingHandler() {
+    return {
+        loading: false,
+        progress: 0,
+        message: "Initializing...",
 
+        startLoading(event) {
+            this.loading = true;
+
+            const steps = [
+                "Analyzing your profile...",
+                "Understanding your skills...",
+                "Evaluating your personality...",
+                "Matching career paths...",
+                "Building your roadmap...",
+                "Finalizing results..."
+            ];
+
+            let i = 0;
+
+            let interval = setInterval(() => {
+
+                if (i < steps.length) {
+                    this.message = steps[i];
+
+                    // smooth random-like progress
+                    this.progress += Math.floor(Math.random() * 15) + 10;
+
+                    if (this.progress > 95) {
+                        this.progress = 95;
+                    }
+
+                    i++;
+                } else {
+                    clearInterval(interval);
+
+                    // final smooth finish
+                    this.progress = 100;
+
+                    setTimeout(() => {
+                        event.target.submit();
+                    }, 500);
+                }
+
+            }, 500);
+        }
+    }
+}
+</script>
 </x-app-layout>

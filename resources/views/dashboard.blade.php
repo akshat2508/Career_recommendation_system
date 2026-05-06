@@ -193,18 +193,31 @@
             Build your profile to unlock AI career insights.
         </p>
 
-        @php
+    @php
     $hasPersonality = auth()->user()->profile && auth()->user()->profile->personality;
 @endphp
 
 <a href="{{ $hasPersonality ? route('career.create') : route('personality') }}"
    class="brutal-btn bg-green-300 px-6 py-3 font-bold">
-    START →
+    Analyze My Career →
 </a>
 
     </div>
 
     @endif
+
+    <div class="mb-8 flex justify-end">
+
+@php
+    $hasPersonality = auth()->user()->profile && auth()->user()->profile->personality;
+@endphp
+
+<a href="{{ $hasPersonality ? route('career.create') : route('personality') }}"
+   class="brutal-btn bg-blue-300 px-5 py-2 font-bold">
+    + New Analysis
+</a>
+
+</div>
 
 
     <!-- 📜 HISTORY -->
