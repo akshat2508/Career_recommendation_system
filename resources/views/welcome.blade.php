@@ -413,9 +413,9 @@
             font-family: 'Unbounded', sans-serif;
             font-size: 52px;
             font-weight: 900;
-            opacity: 0.12;
             line-height: 1;
             margin-bottom: 20px;
+            color: black;
         }
 
         .what-card-icon {
@@ -481,7 +481,7 @@
             font-family: 'Unbounded', sans-serif;
             font-size: 40px;
             font-weight: 900;
-            color: #1c1c1c;
+            color: white;
             margin-bottom: 20px;
             line-height: 1;
             transition: color 0.25s;
