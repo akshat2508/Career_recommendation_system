@@ -76,6 +76,9 @@
 @else
     <p class="text-red-200 text-sm mt-1">Needs improvement</p>
 @endif
+<p class="text-sm mt-2 opacity-90">
+    {{ $latest->explanation }}
+</p>
 
         <!-- Skills -->
         @if(!empty($latest->required_skills))

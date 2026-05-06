@@ -70,6 +70,23 @@ foreach ($recommendations as $rec) {
     $finalScore = round(($skillScore * 0.7) + ($personalityScore * 0.3));
 
     $rec->matchScore = $finalScore;
+    // 🔥 Explanation Engine
+
+$matchedSkillCount = count($matched);
+$totalSkills = count($required);
+
+$topTraits = [];
+
+foreach ($personality as $trait => $value) {
+    if ($value >= 3) {
+        $topTraits[] = $trait;
+    }
+}
+
+$topTraits = array_slice($topTraits, 0, 2);
+
+$rec->explanation = "Strong match because you have {$matchedSkillCount}/{$totalSkills} required skills"
+    . (count($topTraits) ? " and your " . implode(' + ', $topTraits) . " personality aligns well." : ".");
 }
 $recommendations = $recommendations->sortByDesc('matchScore')->values();
 
