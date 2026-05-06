@@ -107,9 +107,9 @@
             </p>
 
         </div>
+        <a href="{{ route('career.pdf', $career->id) }}"
+         class="bg-green-600 text-white px-4 py-2 rounded mt-4 inline-block">
+         Download PDF Report
+      </a>
     </div>
-    <a href="{{ route('career.pdf', $career->id) }}"
-     class="bg-green-600 text-white px-4 py-2 rounded mt-4 inline-block">
-     Download PDF Report
-  </a>
 </x-app-layout>
