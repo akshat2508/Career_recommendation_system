@@ -15,7 +15,13 @@ use App\Models\Recommendation;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-
+$careerPersonalityMap = [
+    'devops engineer' => ['analytical', 'structured'],
+    'cloud solutions architect' => ['analytical', 'structured'],
+    'ui/ux designer' => ['creative'],
+    'product manager' => ['social', 'analytical'],
+    'data scientist' => ['analytical'],
+];
 Route::get('/', function () {
     return view('welcome');
 });
@@ -121,6 +127,6 @@ Route::get('/career/{id}/pdf', [CareerController::class, 'exportPdf'])
     ->middleware('auth');
     
 Route::post('/chat', [CareerController::class, 'chat'])->name('career.chat');
-Route::get('/personality', [CareerController::class, 'personalityForm'])->name('personality.form');
+Route::get('/personality', [CareerController::class, 'personalityForm'])->name('personality');
 Route::post('/personality', [CareerController::class, 'personalitySubmit'])->name('personality.submit');
 require __DIR__.'/auth.php';

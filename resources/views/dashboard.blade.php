@@ -1,5 +1,50 @@
 <x-app-layout>
+@php
+    $personality = auth()->user()->profile->personality ?? [];
+    arsort($personality);
+    $topTraits = array_keys(array_slice($personality, 0, 2));
 
+    function getPersonalityTitle($traits) {
+        $map = [
+            'analytical_structured' => 'System Thinker',
+            'structured_analytical' => 'System Thinker',
+
+            'creative_social' => 'Creative Collaborator',
+            'social_creative' => 'Creative Collaborator',
+
+            'analytical_creative' => 'Innovative Problem Solver',
+            'creative_analytical' => 'Innovative Problem Solver',
+
+            'social_structured' => 'Organized Leader',
+            'structured_social' => 'Organized Leader',
+        ];
+
+        $key = implode('_', $traits);
+        return $map[$key] ?? 'Balanced Individual';
+    }
+
+    $personalityTitle = getPersonalityTitle($topTraits);
+@endphp
+
+@if(count($topTraits) > 0)
+<div class="brutal p-6 bg-blue-100 mb-8">
+
+    <p class="text-sm font-semibold mb-2">YOUR PROFILE TYPE</p>
+
+    <h2 class="text-xl font-bold">
+    {{ $personalityTitle }}
+</h2>
+
+<p class="text-sm mt-1">
+    {{ ucfirst($topTraits[0]) }} + {{ ucfirst($topTraits[1] ?? '') }}
+</p>
+
+    <p class="text-sm mt-2">
+        Your recommendations are based on your personality and skills.
+    </p>
+
+</div>
+@endif
 <div class="max-w-7xl mx-auto p-6">
 
     <!-- 🔥 HERO (BEST MATCH) -->
@@ -66,6 +111,14 @@
             </p>
         </div>
         @endif
+        @if(!empty($topTraits))
+<div class="mt-6 brutal-sm p-4 bg-gray-50">
+    <p class="text-sm font-semibold mb-1">PERSONALITY MATCH</p>
+    <p class="text-sm">
+        This role aligns with your {{ implode(' + ', $topTraits) }} traits.
+    </p>
+</div>
+@endif
 
         <!-- REQUIRED SKILLS -->
         @if(!empty($latest->required_skills))
@@ -140,10 +193,14 @@
             Build your profile to unlock AI career insights.
         </p>
 
-        <a href="{{ route('career.create') }}"
-           class="brutal-btn bg-green-300 px-6 py-3 font-bold">
-            START →
-        </a>
+        @php
+    $hasPersonality = auth()->user()->profile && auth()->user()->profile->personality;
+@endphp
+
+<a href="{{ $hasPersonality ? route('career.create') : route('personality') }}"
+   class="brutal-btn bg-green-300 px-6 py-3 font-bold">
+    START →
+</a>
 
     </div>
 
