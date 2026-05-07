@@ -26,7 +26,7 @@
     <p class="text-sm text-center">
         New here?
         <a href="{{ route('register') }}" class="underline font-semibold">
-            Create account
+            Create account -->
         </a>
     </p>
 </form>
