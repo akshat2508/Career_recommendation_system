@@ -4,7 +4,7 @@
 
     <!-- 🔙 BACK -->
     <a href="/dashboard" class="font-semibold hover:underline">
-        ← Back to Dashboard
+        ← Back To Dashboard
     </a>
 
     <!-- 🔥 HERO -->
