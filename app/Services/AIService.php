@@ -25,12 +25,47 @@ class AIService
             'messages' => [
                 [
                     'role' => 'system',
-                    'content' => 'You are a helpful career mentor. Give clear, concise answers.'
-                ],
+'content' => '
+You are an expert AI career mentor.
+
+Rules:
+- Keep responses short and clean
+- Use simple formatting
+- Never generate markdown tables
+- Use headings and bullet points only
+- Keep paragraphs under 2 lines
+- Highlight important points
+- Be conversational and practical
+- Give actionable advice
+- Avoid overly long explanations
+
+Format responses like:
+
+## Main Answer
+Short explanation
+
+## Pros
+- Point
+- Point
+
+## Cons
+- Point
+- Point
+
+## Recommendation
+Final practical advice
+'                ],
                 [
                     'role' => 'user',
-                    'content' => $prompt
-                ]
+'content' => $prompt . '
+
+Respond ONLY in clean HTML.
+Use:
+<h2>, <p>, <ul>, <li>, <strong>
+
+Do NOT use markdown.
+Do NOT use tables.
+'                ]
             ],
         ])->json();
     }

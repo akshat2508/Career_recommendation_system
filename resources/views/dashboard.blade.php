@@ -400,9 +400,9 @@ function sendMessage() {
     .then(data => {
         document.getElementById(loadingId)?.remove();
         box.innerHTML += `
-            <div class="brutal-sm bg-white p-3 max-w-[80%]">
-                <p class="text-sm">${data.reply}</p>
-            </div>`;
+    <div class="brutal-sm bg-white p-4 max-w-[80%] ai-response">
+        ${data.reply}
+    </div>`;
         box.scrollTop = box.scrollHeight;
     })
     .catch(() => {
@@ -455,6 +455,47 @@ document.getElementById('chat-input').addEventListener('keypress', function (e) 
         border-width: 3px;
         box-shadow: 5px 5px 0 0 rgba(0,0,0,1);
     }
+}
+.ai-response {
+    line-height: 1.8;
+    font-size: 14px;
+    overflow-wrap: break-word;
+}
+
+.ai-response h2 {
+    font-size: 20px;
+    font-weight: 900;
+    margin-top: 12px;
+    margin-bottom: 10px;
+}
+
+.ai-response h3 {
+    font-size: 16px;
+    font-weight: 800;
+    margin-top: 10px;
+    margin-bottom: 8px;
+}
+
+.ai-response p {
+    margin-bottom: 10px;
+    color: #111827;
+}
+
+.ai-response ul {
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.ai-response li {
+    margin-bottom: 6px;
+}
+
+.ai-response strong {
+    font-weight: 800;
+}
+
+.ai-response br {
+    margin-bottom: 8px;
 }
 </style>
 
