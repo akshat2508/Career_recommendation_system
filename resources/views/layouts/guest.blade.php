@@ -16,7 +16,7 @@
     </head>
    <body class="font-sans bg-white text-black flex items-center justify-center min-h-screen">
 
-    <div class="w-full max-w-md brutal p-8 bg-white">
+    <div class="w-full  brutal p-8 bg-white">
 
         <!-- LOGO -->
         <div class="mb-6 text-center">
