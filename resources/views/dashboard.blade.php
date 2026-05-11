@@ -258,7 +258,7 @@
                 class="brutal-btn bg-white w-full px-6 py-4 flex items-center justify-between font-black text-base"
             >
                 <div class="flex items-center gap-3">
-                    <span>History</span>
+                    <span>Other Analysis</span>
                     <span class="brutal-sm bg-gray-200 px-3 py-1 text-xs font-black">
                         {{ count($history) }} {{ count($history) === 1 ? 'ANALYSIS' : 'ANALYSES' }}
                     </span>
