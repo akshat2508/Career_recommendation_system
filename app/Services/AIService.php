@@ -117,4 +117,101 @@ Return ONLY valid JSON (no text outside JSON):
         ],
     ])->json();
 }
+
+public function analyzeResume($resumeText)
+{
+$prompt = "
+You are an ATS resume analyzer.
+
+Analyze the resume and return VALID JSON ONLY.
+
+No markdown.
+No explanations.
+No extra text.
+
+JSON FORMAT:
+
+{
+  \"ats_score\": 0,
+  \"detected_skills\": [],
+  \"missing_skills\": [],
+  \"strengths\": [],
+  \"weaknesses\": [],
+  \"career_matches\": [
+    {
+      \"role\": \"\",
+      \"match_percentage\": 0
+    }
+  ],
+  \"improvements\": []
+}
+
+Resume Content:
+{$resumeText}
+";
+    $response = Http::withHeaders([
+        'Authorization' => 'Bearer ' . env('GROQ_API_KEY'),
+        'Content-Type' => 'application/json',
+    ])->post(
+        'https://api.groq.com/openai/v1/chat/completions',
+        [
+
+            'model' => 'openai/gpt-oss-20b',
+
+            'messages' => [
+                [
+                    'role' => 'system',
+                    'content' =>
+                        'You are a professional ATS AI. Return ONLY raw JSON.'
+                ],
+                [
+                    'role' => 'user',
+                    'content' => $prompt
+                ]
+            ],
+
+            'temperature' => 0.3,
+        ]
+    );
+
+    $content =
+        $response['choices'][0]['message']['content'] ?? null;
+
+    if (!$content) {
+
+        return [
+            'ats_score' => 0,
+            'detected_skills' => [],
+            'missing_skills' => [],
+            'strengths' => [],
+            'weaknesses' => [],
+            'career_matches' => [],
+            'improvements' => [],
+        ];
+    }
+
+    // 🔥 CLEAN JSON
+    $content = trim($content);
+    // dd($content);
+
+    $content = str_replace('```json', '', $content);
+    $content = str_replace('```', '', $content);
+
+    $decoded = json_decode($content, true);
+
+    if (!$decoded) {
+
+        return [
+            'ats_score' => 0,
+            'detected_skills' => [],
+            'missing_skills' => [],
+            'strengths' => [],
+            'weaknesses' => [],
+            'career_matches' => [],
+            'improvements' => [],
+        ];
+    }
+
+    return $decoded;
+}
 }

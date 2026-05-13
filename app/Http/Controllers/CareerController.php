@@ -9,6 +9,8 @@ use App\Models\Interest;
 use App\Services\AIService;
 use App\Models\Recommendation;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\ResumeAnalysis;
+use App\Services\ResumeParserService;
 
 $careerPersonalityMap = [
     'devops engineer' => ['analytical', 'structured'],
@@ -261,4 +263,63 @@ Answer clearly, structured, and practical. Avoid long paragraphs.
 
         return redirect()->route('career.create')->with('success', 'Personality saved!');
     }
+
+
+    public function resumeForm()
+{
+    return view('career.resume');
+}
+
+public function analyzeResume(
+    Request $request,
+    ResumeParserService $parser,
+    AIService $aiService
+)
+{
+    $request->validate([
+        'resume' => 'required|mimes:pdf,docx|max:5120'
+    ]);
+
+    $file = $request->file('resume');
+
+    $path = $file->store('resumes', 'public');
+
+    $resumeText = $parser->extractText($file);
+    // dd($resumeText);
+
+    $analysis = $aiService->analyzeResume($resumeText);
+
+    $resume = ResumeAnalysis::create([
+
+        'user_id' => auth()->id(),
+
+        'resume_path' => $path,
+
+        'resume_text' => $resumeText,
+
+        'ats_score' => $analysis['ats_score'] ?? 0,
+
+        'detected_skills' =>
+            $analysis['detected_skills'] ?? [],
+
+        'missing_skills' =>
+            $analysis['missing_skills'] ?? [],
+
+        'career_matches' =>
+            $analysis['career_matches'] ?? [],
+
+        'strengths' =>
+            $analysis['strengths'] ?? [],
+
+        'weaknesses' =>
+            $analysis['weaknesses'] ?? [],
+
+        'ai_analysis' => json_encode($analysis),
+    ]);
+
+    return view(
+        'career.resume-result',
+        compact('resume', 'analysis')
+    );
+}
 }

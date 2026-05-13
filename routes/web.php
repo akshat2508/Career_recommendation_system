@@ -116,10 +116,20 @@ Route::middleware('auth')->group(function () {
 
 
 Route::middleware('auth')->group(function () {
-    Route::get('/career', [CareerController::class, 'create'])->name('career.create');
-    Route::post('/career', [CareerController::class, 'store'])->name('career.store');
-});
 
+    Route::get('/career', [CareerController::class, 'create'])
+        ->name('career.create');
+
+    Route::post('/career', [CareerController::class, 'store'])
+        ->name('career.store');
+
+    // 🔥 Resume Analyzer
+    Route::get('/resume', [CareerController::class, 'resumeForm'])
+        ->name('resume.form');
+
+    Route::post('/resume/analyze', [CareerController::class, 'analyzeResume'])
+        ->name('resume.analyze');
+});
 Route::get('/career/{id}', [CareerController::class, 'show'])->name('career.show');
 
 Route::get('/career/{id}/pdf', [CareerController::class, 'exportPdf'])
