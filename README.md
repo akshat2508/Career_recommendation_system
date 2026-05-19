@@ -273,12 +273,12 @@ resume_analyses
 - `users` → `resume_analyses`: One-to-Many
 
 ---
-```md id="l6xizt"
+```md id="y0d5j7"
 ## 📸 Screenshots
 
 ### 🏠 Landing Page
 
-![Landing Page](./screenshots/landing.png)
+![Landing Page](screenshots/landing.png)
 
 > AI-powered landing page showcasing personalized career intelligence, skill-gap analysis, and recommendation accuracy.
 
@@ -286,7 +286,7 @@ resume_analyses
 
 ### 📊 Empty Dashboard State
 
-![Empty Dashboard](./screenshots/dashboard_empty.png)
+![Empty Dashboard](screenshots/dashboard_empty.png)
 
 > Initial dashboard state before recommendation generation with integrated AI mentor assistant.
 
@@ -294,7 +294,7 @@ resume_analyses
 
 ### 📈 Career Intelligence Dashboard
 
-![Dashboard](./screenshots/dashboard.png)
+![Dashboard](screenshots/dashboard.png)
 
 > Personalized dashboard displaying match scores, personality alignment, required skills, and recommendation analytics.
 
@@ -302,7 +302,7 @@ resume_analyses
 
 ### 📄 Resume Upload Interface
 
-![Resume Upload](./screenshots/ATS_upload_page.png)
+![Resume Upload](screenshots/ATS_upload_page.png)
 
 > Resume intelligence upload interface supporting PDF and DOCX parsing with ATS analysis.
 
@@ -310,7 +310,7 @@ resume_analyses
 
 ### 🧠 ATS Resume Analysis Result
 
-![ATS Result](./screenshots/ATS_result.png)
+![ATS Result](screenshots/ATS_result.png)
 
 > AI-generated ATS scoring breakdown including keyword analysis, technical depth, industry alignment, and career compatibility.
 
@@ -318,10 +318,11 @@ resume_analyses
 
 ### 📑 PDF Career Report Export
 
-![PDF Export](./screenshots/pdf_export.png)
+![PDF Export](screenshots/pdf_export.png)
 
 > Downloadable AI-generated career analysis report with match scoring and skill-gap insights.
 ```
+
 ---
 
 ## 🚀 Installation
@@ -718,7 +719,7 @@ php artisan test --testsuite=Unit
 
 | Name | Role |
 |------|------|
-| [Your Name](https://github.com/akshat2508) | Full-Stack Engineer & AI Systems Architect |
+| [Akshat Paul](https://github.com/akshat2508) | Full-Stack Engineer & AI Systems Architect |
 
 Contributions, issues, and feature requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
