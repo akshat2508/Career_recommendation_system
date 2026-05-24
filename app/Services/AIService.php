@@ -129,22 +129,41 @@ No markdown.
 No explanations.
 No extra text.
 
+
 JSON FORMAT:
 
 {
   \"ats_score\": 0,
+
   \"detected_skills\": [],
+
   \"missing_skills\": [],
+
   \"strengths\": [],
+
   \"weaknesses\": [],
+
   \"career_matches\": [
     {
       \"role\": \"\",
       \"match_percentage\": 0
     }
   ],
+
+  \"recommended_jobs\": [
+    {
+      \"title\": \"\",
+      \"company\": \"\",
+      \"location\": \"\",
+      \"salary\": \"\",
+      \"match_percentage\": 0,
+      \"reason\": \"\"
+    }
+  ],
+
   \"improvements\": []
 }
+
 
 Resume Content:
 {$resumeText}
@@ -186,6 +205,7 @@ Resume Content:
             'strengths' => [],
             'weaknesses' => [],
             'career_matches' => [],
+            'recommended_jobs' => [],
             'improvements' => [],
         ];
     }
@@ -208,6 +228,7 @@ Resume Content:
             'strengths' => [],
             'weaknesses' => [],
             'career_matches' => [],
+            'recommended_jobs' => [],
             'improvements' => [],
         ];
     }

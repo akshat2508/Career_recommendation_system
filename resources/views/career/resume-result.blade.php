@@ -381,6 +381,83 @@ $roleSkillGaps = [
     </div>
 
 
+{{-- RECOMMENDED JOBS --}}
+<div class="space-y-6">
+
+    <div>
+        <h2 class="text-3xl font-black">
+            Best Jobs You Can Apply For
+        </h2>
+
+        <p class="text-gray-600 mt-2">
+            AI-generated job opportunities based on your resume profile.
+        </p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+        @foreach(($analysis['recommended_jobs'] ?? []) as $job)
+
+            <div class="bg-blue-50 border-4 border-black shadow-[8px_8px_0px_#000] rounded-2xl p-6">
+
+                <div class="flex items-start justify-between">
+
+                    <div>
+
+                        <h3 class="text-2xl font-black">
+                            {{ $job['title'] }}
+                        </h3>
+
+                        <p class="mt-2 text-lg font-semibold">
+                            {{ $job['company'] }}
+                        </p>
+
+                        <p class="text-gray-700">
+                            {{ $job['location'] }}
+                        </p>
+
+                    </div>
+
+                    <div class="bg-black text-white px-4 py-2 rounded-xl font-bold">
+                        {{ $job['match_percentage'] }}%
+                    </div>
+
+                </div>
+
+                <div class="mt-6">
+
+                    <p class="text-sm uppercase tracking-widest font-semibold mb-2">
+                        Estimated Salary
+                    </p>
+
+                    <p class="text-2xl font-black">
+                        {{ $job['salary'] }}
+                    </p>
+
+                </div>
+
+                <div class="mt-6 bg-white border-2 border-black rounded-xl p-4">
+
+                    <p class="text-sm uppercase tracking-widest font-semibold mb-2">
+                        Why You Match
+                    </p>
+
+                    <p class="leading-relaxed text-sm">
+                        {{ $job['reason'] }}
+                    </p>
+
+                </div>
+
+            </div>
+
+        @endforeach
+
+    </div>
+
+</div>
+
+
+
     {{-- ROLE BASED SKILL GAPS --}}
     <div>
 
