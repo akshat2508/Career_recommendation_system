@@ -735,4 +735,5 @@ This project is licensed under the [MIT License](LICENSE).
 
 Built with Laravel · Groq LLM · TailwindCSS · structured intelligence pipelines
 
+Author akshat
 </div>
